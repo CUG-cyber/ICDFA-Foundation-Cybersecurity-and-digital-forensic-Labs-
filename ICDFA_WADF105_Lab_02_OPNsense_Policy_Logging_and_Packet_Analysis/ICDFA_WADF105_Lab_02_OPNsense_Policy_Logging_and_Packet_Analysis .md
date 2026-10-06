@@ -8,7 +8,7 @@ A controlled firewall-policy experiment on the previously commissioned OPNsense 
 
 ## 🎯 Objective
 
-Demonstrate — with evidence from four independent sources (CLI tests, OPNsense Live View logs, Wireshark packet captures, and the OPNsense state table) that agree with each other — a core firewall concept: **specific rules placed above a broad allow rule take effect first**, and that blocking one protocol (ICMP) or one port (TCP/80) does not affect unrelated traffic (DNS, HTTPS) sharing the same path.
+Demonstrate - with evidence from four independent sources (CLI tests, OPNsense Live View logs, Wireshark packet captures, and the OPNsense state table) that agree with each other - a core firewall concept: **specific rules placed above a broad allow rule take effect first**, and that blocking one protocol (ICMP) or one port (TCP/80) does not affect unrelated traffic (DNS, HTTPS) sharing the same path.
 
 ## 🗂️ Repository Structure
 
@@ -26,9 +26,9 @@ Screenshots are numbered in the exact order the lab was performed, with descript
 
 ---
 
-## 🔍 Part A — Baseline (before any rules are added)
+## 🔍 Part A - Baseline (before any rules are added)
 
-Before touching the firewall, every relevant test was run and recorded so later results could be compared against a known-good state — Ubuntu's addressing/routing, a ping to `1.1.1.1`, DNS resolution, and **both** HTTP and HTTPS to the same host, specifically so a later HTTP-only failure could be attributed to the new rule rather than a pre-existing problem.
+Before touching the firewall, every relevant test was run and recorded so later results could be compared against a known-good state -Ubuntu's addressing/routing, a ping to `1.1.1.1`, DNS resolution, and **both** HTTP and HTTPS to the same host, specifically so a later HTTP-only failure could be attributed to the new rule rather than a pre-existing problem.
 
 ![Baseline — IP address, route, ping](screenshots/01-baseline-ip-address-route-ping.png)
 ![Baseline — curl -I http://example.com](screenshots/02-baseline-curl-http-example-com.png)
@@ -36,7 +36,7 @@ Before touching the firewall, every relevant test was run and recorded so later 
 
 ---
 
-## 🧱 Part B — Reviewing Rule Order
+## 🧱 Part B - Reviewing Rule Order
 
 Confirmed the existing broad `Default allow LAN to any` rule in **Firewall → Rules → LAN**, and noted that OPNsense evaluates rules **top to bottom, first match wins** — meaning any new restriction has to sit *above* this rule, not below it, or it will simply never be reached.
 
@@ -44,7 +44,7 @@ Confirmed the existing broad `Default allow LAN to any` rule in **Firewall → R
 
 ---
 
-## 🚫 Part C — Blocking ICMP to a Single Host
+## 🚫 Part C - Blocking ICMP to a Single Host
 
 A narrow rule was added — **Block / LAN / In / IPv4 / ICMP / LAN net → 1.1.1.1/32**, logging enabled — and positioned above the default allow rule.
 
@@ -52,7 +52,7 @@ A narrow rule was added — **Block / LAN / In / IPv4 / ICMP / LAN net → 1.1.1
 
 **Result:** `ping -c 4 1.1.1.1` → **100% packet loss**, while `getent hosts example.com` and `curl -I https://example.com` **both still succeeded** in the same test run — direct proof the block is protocol-specific, not a blanket internet outage.
 
-![ICMP blocked — ping fails, DNS and HTTPS still work](screenshots/06-icmp-blocked-ping-fail-dns-https-ok.png)
+![ICMP blocked - ping fails, DNS and HTTPS still work](screenshots/06-icmp-blocked-ping-fail-dns-https-ok.png)
 
 ---
 
@@ -68,7 +68,7 @@ A second rule was added — **Block / LAN / In / IPv4 / TCP / LAN net → Any, d
 
 ---
 
-## 📋 Part E — Correlating with OPNsense Firewall Logs
+## 📋 Part E - Correlating with OPNsense Firewall Logs
 
 **Firewall → Log Files → Live View** was filtered by each rule's description to isolate matching entries, confirming the exact timestamp, source/destination IP, protocol, port, and the specific rule label responsible for each drop.
 
