@@ -56,7 +56,7 @@ A narrow rule was added — **Block / LAN / In / IPv4 / ICMP / LAN net → 1.1.1
 
 ---
 
-## 🚫 Part D — Blocking Outbound HTTP While Allowing HTTPS
+## 🚫 Part D - Blocking Outbound HTTP While Allowing HTTPS
 
 A second rule was added — **Block / LAN / In / IPv4 / TCP / LAN net → Any, destination port 80** — again positioned above the default allow rule.
 
